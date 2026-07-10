@@ -4,15 +4,15 @@
 https://github.com/user-attachments/assets/b08e641e-985b-4bd4-83ff-6750272d0c37
 
 
-A Claude Code skill that builds an immersive, **scroll-scrubbed "fly through the world"
-landing page** for any industry or brand — the kind where, as you scroll, a camera flies
+An agent skill — for Claude Code, Codex, and any `SKILL.md`-compatible agent — that
+builds an immersive, **scroll-scrubbed "fly through the world" landing page** for any industry or brand — the kind where, as you scroll, a camera flies
 from *outside* each scene *into* its interior, then flows on to the next scene with **no
 cuts**. One continuous connected flight through a little generated world (think the Emons
 logistics site, applied to whatever you want).
 
 ## Install
 
-### As a plugin (recommended)
+### Claude Code — as a plugin (recommended)
 
 ```
 /plugin marketplace add oso95/scroll-world
@@ -21,13 +21,27 @@ logistics site, applied to whatever you want).
 
 Then just ask for a scroll-through world landing page, or invoke `/scroll-world`.
 
+### Codex & other agents — via the skills CLI
+
+Using [Vercel's skills CLI](https://github.com/vercel-labs/skills), which installs into
+Codex, Claude Code, Cursor, and 20+ other agents:
+
+```bash
+npx skills add oso95/scroll-world            # pick your agent(s) when prompted
+npx skills add oso95/scroll-world -a codex   # or target Codex directly
+```
+
+In Codex, invoke it with `$scroll-world` (or `/skills` to browse), or just ask for a
+scroll-through world landing page.
+
 ### Manually (drop-in skill)
 
-Copy the skill folder into your Claude Code skills directory:
+Copy the skill folder into your agent's skills directory:
 
 ```bash
 git clone https://github.com/oso95/scroll-world
-cp -R scroll-world/plugins/scroll-world/skills/scroll-world ~/.claude/skills/
+cp -R scroll-world/skills/scroll-world ~/.claude/skills/   # Claude Code
+cp -R scroll-world/skills/scroll-world ~/.codex/skills/    # Codex
 ```
 
 ## Requirements
@@ -51,20 +65,9 @@ When invoked, the skill:
 1. **Interviews you** — the subject/industry + pitch, a brand kit (import from a URL, hand
    it over, or have it proposed), art direction, and the ordered scenes the camera visits.
 2. **Generates the assets** with Higgsfield — one still per scene, one "dive-in" camera
-   clip per scene, and the **connector** clips that join consecutive scenes.
+   clip per scene, and the **connector** clips that join consecutive scenes, generated
+   from the actual rendered frames of their neighbours so every seam is frame-identical.
 3. **Wires it up** — a config-driven scroll engine that plays the whole chain as one flight.
-
-### The part that makes it good
-
-The scenes connect **seamlessly** because each connector clip is generated with the
-*actual rendered frames* of its neighbours as its start/end images (not the original
-stills — those re-render slightly differently and would pop at the seam). Both sides of
-every seam end up frame-identical, so the camera never cuts. This is baked into the skill
-as the central rule.
-
-It also captures the non-obvious production gotchas: blob-URL loading so scrubbing works on
-hosts that don't serve HTTP byte-range requests, GOP/encoding settings that stay sharp
-without bloating, and Higgsfield's quirks.
 
 ## What's in the skill
 

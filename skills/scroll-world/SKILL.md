@@ -63,7 +63,8 @@ not the framework.
 The **subject is the user's to state — ask it as an open question in plain prose**, never a
 fabricated multiple-choice. A made-up list of industries biases them and reads as you
 deciding their business for them; let them answer in their own words (their real business,
-a client's, or any idea). Reserve `AskUserQuestion` (with options) for the genuinely
+a client's, or any idea). Reserve structured multiple-choice (`AskUserQuestion` in Claude
+Code; a plain either/or question elsewhere) for the genuinely
 enumerable, lower-stakes choices below — art direction and brand-kit approach — and even
 there, signal they can go their own way ("Other"). Ask only what you can't sensibly
 default. Cover:
@@ -88,8 +89,9 @@ default. Cover:
    the hero product. Each section needs: a short subject description (what's IN the
    diorama), an eyebrow, a headline, one line of body, and 0–3 tag pills. The last
    section is usually the hero product + the CTA.
-5. **Mobile version (beta) — ALWAYS ask this; never silently generate both.** Use
-   `AskUserQuestion`: *"Want a mobile-optimized version too? Mobile support is in
+5. **Mobile version (beta) — ALWAYS ask this; never silently generate both.** Ask as a
+   two-option choice (`AskUserQuestion` in Claude Code; a plain question elsewhere):
+   *"Want a mobile-optimized version too? Mobile support is in
    **beta** — the scroll-scrub mechanic is desktop-native; on phones you get lighter
    encodes and engine hardening, but portrait crops the 16:9 frame and low-end devices
    may still stutter."* Options: "Desktop only" / "Desktop + mobile (beta)". The beta
