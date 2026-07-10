@@ -85,6 +85,16 @@ skills/scroll-world/
   and takes a while — the skill runs generations in the background and polls.
 - The generated `.mp4`/`.webp` assets are produced per project; they're not shipped here.
 
+## Star History
+
+<a href="https://www.star-history.com/#oso95/scroll-world&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=oso95/scroll-world&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=oso95/scroll-world&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=oso95/scroll-world&type=Date" />
+ </picture>
+</a>
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
