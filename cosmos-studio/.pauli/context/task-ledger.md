@@ -50,3 +50,18 @@ changed: stages/01_intake/{CONTEXT.md,prd-template.md}, stages/02_world_bible/{C
 tests: full stub-mode pipeline run stages 02→03→06 + decrypt roundtrip + both quality gates PASS
 risks: udec-scorer heuristics are conservative; model review pass (not runnable offline) is the second half of the gate by design
 next: Phase 3 — five workflow sub-pipelines under stages/04_assemble/workflows/
+
+## Phase 3 — Workflow sub-pipelines ✅
+facts:
+  - scroll-cinematic.js REUSES the pauli-scroll-world scrub engine (inlined into the deliverable page) — engine untouched; Krug audit runs on copy BEFORE wiring (fails the assembly, not the quality stage). Deliverable scored UDEC 9.79 with gates PASS.
+  - ugc-ads: 4 formats × 2 hook styles (authority/story) = 8 variants, market character defaults parsed from market config, generate_audio true, cost-gated up front. Stub run produced 8 labeled .stub.json manifests.
+  - anime-dag.yaml: CPM DAG with parallel waves; route fields are ROUTER TASK TYPES (never model names); cross-model continuity = extract last frame → histogram match → i2v seed.
+  - documentary.js: StoryToolkitAI fork subprocess (STORYTOOLKIT_DIR), stub transcription when fork absent; EDL + concat cut verified with real ffmpeg footage.
+  - faceless-youtube.js: full chain verified in stub mode — script → silent narration stub → testsrc visuals → captions/tags → thumbnail → main-video.mp4 + 60s 9:16 short.mp4.
+decisions:
+  - Missing connectors are nulls in the engine config (engine crossfades) — graceful degradation over pipeline failure.
+  - Stub media are real encodable files (testsrc/anullsrc), so ffmpeg assembly paths run for real in dev.
+changed: stages/04_assemble/workflows/{scroll-cinematic.js,ugc-ads.js,anime-dag.yaml,documentary.js,faceless-youtube.js}
+tests: all 4 runnable workflows executed stub-mode end-to-end; scroll-cinematic deliverable passed KRUG + UDEC (9.79)
+risks: anime DAG needs a Forge-film runner in prod; documentary needs the StoryToolkitAI fork cloned to vendor/
+next: Phase 4 — landing/index.html (EN/ES/SR single file, scroll-world demo built in)

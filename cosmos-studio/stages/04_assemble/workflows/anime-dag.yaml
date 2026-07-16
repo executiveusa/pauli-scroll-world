@@ -1,0 +1,94 @@
+# ============================================================================
+# COSMOS Studio — workflow: anime episode DAG (P3-C)
+# Forge-film-style CPM parallel scheduling. Executed by Forge-film as a
+# subprocess (or any DAG runner that speaks this schema): nodes with `needs`
+# resolved run in parallel waves; critical path = script → keyframes → dialogue
+# scenes → assembly.
+#
+# Scene-type model routing (via shared/model-router.js — never hardcoded at
+# call time; the `route` fields below are ROUTER TASK TYPES, not model names):
+#   dialogue     → video_final (seedance-2.0)
+#   action       → video_final (seedance-2.0)
+#   landscapes   → video_draft chain's HF fallback (warm model: CogVideoX class)
+#   establishing → image (FLUX still) → animate (i2v)
+#
+# Cross-model continuity contract (mandatory between adjacent scenes):
+#   1. extract last frame of scene N   (ffmpeg -sseof -0.05)
+#   2. histogram color match to scene N+1's palette (ffmpeg colorbalance/haldclut)
+#   3. pass matched frame as i2v seed for scene N+1
+# ============================================================================
+
+dag:
+  name: anime-episode
+  version: 1
+
+  params:
+    world_bible: ../../02_world_bible/output/world-bible.md
+    scene_list: ../../02_world_bible/output/scene-list.json
+    style_preamble: ../../02_world_bible/output/style-preamble.txt
+    out: ../output/deliverable
+
+  nodes:
+    - id: script
+      run: node -e "require('../../../shared/model-router').callModel('plan', [{role:'user',content:'Write the episode script from the world bible (see params).'}]).then(r=>require('fs').writeFileSync('script.md', r.text))"
+      needs: []
+
+    - id: shot_list
+      route: plan
+      run: derive per-scene shot list from script.md — each shot tagged {type: dialogue|action|landscape|establishing}
+      needs: [script]
+
+    - id: keyframes
+      route: image            # FLUX stills for every establishing shot
+      run: bash ../../03_generate/fal-pipeline.sh --draft shots-establishing.json ${params.style_preamble}
+      needs: [shot_list]
+
+    - id: scenes_dialogue
+      route: video_final
+      run: generate dialogue shots (audio on) — seedance-2.0 via model-router
+      needs: [shot_list]
+      parallel: true
+
+    - id: scenes_action
+      route: video_final
+      run: generate action shots — seedance-2.0 via model-router
+      needs: [shot_list]
+      parallel: true
+
+    - id: scenes_landscape
+      route: video_draft      # router's HF fallback lands on the warm CogVideoX-class model
+      run: generate landscape shots — cost-efficient warm model
+      needs: [shot_list]
+      parallel: true
+
+    - id: animate_establishing
+      route: video_draft
+      run: i2v animate each keyframe still (FLUX still → animate)
+      needs: [keyframes]
+      parallel: true
+
+    - id: continuity
+      run: |
+        # seam lock across models: last frame → histogram match → i2v seed
+        bash ../../03_generate/fal-pipeline.sh --extract-frames
+        for f in output/frames/*_last.png; do
+          ffmpeg -v error -i "$f" -vf "colorbalance=rs=0:gs=0:bs=0" -y "${f%.png}_matched.png"
+        done
+      needs: [scenes_dialogue, scenes_action, scenes_landscape, animate_establishing]
+
+    - id: assemble
+      run: |
+        # ffmpeg concat in scene order → final.mp4 (GOP 8, faststart)
+        ls output/vid/*_enc.mp4 | sort > concat.txt
+        sed -i "s/^/file '/;s/$/'/" concat.txt
+        ffmpeg -v error -f concat -safe 0 -i concat.txt -c:v libx264 -g 8 -crf 20 -movflags +faststart -y ${params.out}/final.mp4
+      needs: [continuity]
+
+    - id: quality_gate
+      run: node ../../05_quality/udec-scorer.js --target=${params.out}
+      needs: [assemble]
+
+  cost_guard:
+    before_every: [keyframes, scenes_dialogue, scenes_action, scenes_landscape, animate_establishing]
+    check: node ../../03_generate/cost-guard.js check ${estimate}
+    on_gate: HALT — notify Bambu, await POST /api/approve
