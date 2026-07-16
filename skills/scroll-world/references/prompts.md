@@ -13,7 +13,10 @@ Collect and write down:
 - `TONE` — a word or two (cozy/premium, playful, industrial…).
 - `STYLE` — the art direction (default below).
 - `SECTIONS[]` — ordered list; for each: `id`, `label`, `subject` (what's in the diorama), `eyebrow`, `title`, `body` (≤ 1 sentence), `tags[]` (0–3). Last section = hero product + CTA.
-- `MOBILE` — yes/no. **Always asked** (SKILL Step 1.5), presented to the user as **beta**. Gates the `-m.mp4` encodes (pipeline §6) + `clipMobile`/`connectorsMobile` wiring + the full mobile QA.
+- `MOBILE` — yes/no. **Always asked** (SKILL Step 1.5), presented to the user as **beta**
+  with the ~2× credit cost stated. Yes = the **native 9:16 portrait chain** (pipeline §6b):
+  portrait renders of every dive/connector + `clipMobile`/`connectorsMobile`/`stillMobile`
+  wiring + the full mobile QA. The §6 crop encodes are a no-credits stopgap only.
 
 ## Style preamble (default: clay diorama)
 
@@ -47,12 +50,12 @@ Tips:
 - For the final "hero product" section, drop the diorama-island framing and prompt a
   single oversized product centerpiece floating on the same background with a few small
   orbiting props.
-- **Compose for the centre.** The page renders every clip `object-fit:cover`, and a portrait
-  phone crops a 16:9 frame to roughly its centre half. Keep the focal subject horizontally
-  centred with a little headroom, and don't park anything essential at the far left/right
-  edges — it will be cut off on phones. This also keeps the dive's focal point (which the
-  camera flies toward) inside the mobile crop. For a scene that absolutely must show its full
-  width on mobile, generate a separate 9:16 variant for it.
+- **Compose for the centre.** The page renders every clip `object-fit:cover`. Keep the
+  focal subject horizontally centred with a little headroom, and don't park anything
+  essential at the far left/right edges. Mobile ships its own native 9:16 chain
+  (pipeline §6b), so this is not about surviving a crop — but a centred composition makes
+  the portrait renders open cleanly from the same still, and it keeps the dive's focal
+  point where the camera actually flies.
 - Aspect `3:2`, `--resolution 2k --quality high`.
 
 ## Leg prompt — architecture A, continuous forward take (Step 4)

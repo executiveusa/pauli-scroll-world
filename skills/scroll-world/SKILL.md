@@ -91,15 +91,21 @@ default. Cover:
    section is usually the hero product + the CTA.
 5. **Mobile version (beta) — ALWAYS ask this; never silently generate both.** Ask as a
    two-option choice (`AskUserQuestion` in Claude Code; a plain question elsewhere):
-   *"Want a mobile-optimized version too? Mobile support is in
-   **beta** — the scroll-scrub mechanic is desktop-native; on phones you get lighter
-   encodes and engine hardening, but portrait crops the 16:9 frame and low-end devices
-   may still stutter."* Options: "Desktop only" / "Desktop + mobile (beta)". The beta
-   disclaimer must be stated to the user, not just implied. What the answer gates:
-   - **Yes** → produce the `-m.mp4` mobile encodes (Step 6) and wire
-     `clipMobile`/`connectorsMobile` (Step 7); run the full mobile QA (Step 8). If any
-     scene's focal subject sits off-centre, offer the 9:16 hero-variant escape hatch
-     (extra Higgsfield credits — say so).
+   *"Want a mobile-optimized version too? Mobile support is in **beta** — the scroll-scrub
+   mechanic is desktop-native. The mobile version is a second camera chain rendered
+   natively in **9:16 portrait** — composed for phones, not a crop of the landscape film —
+   which roughly doubles the Higgsfield credit spend (state the estimated number)."*
+   Options: "Desktop only" / "Desktop + mobile (beta, native 9:16 — ~2× credits)". The
+   beta disclaimer and the credit cost must be stated to the user, not just implied.
+   What the answer gates:
+   - **Yes** → render the parallel 9:16 portrait chain and ship it as the mobile variants
+     (Step 6 / pipeline.md §6b): portrait start canvases → 9:16 dives + connectors
+     frame-locked against their own renders → 720-wide `-m.mp4` encodes → `stillMobile`
+     portrait posters. Wire `clipMobile`/`connectorsMobile`/`stillMobile` (Step 7); run
+     the full mobile QA (Step 8). Budget ~2N-1 extra video gens + NSFW re-rolls.
+     **Never ship the centre-crop as the mobile version by default** — if credits can't
+     cover the portrait chain, say so and offer the crop encodes (pipeline.md §6) as an
+     explicitly-labelled stopgap the user must approve.
    - **No** → skip the mobile encodes and wiring entirely. The engine's phone hardening
      (seek-coalescing, iOS priming, safe-area CSS) is always on regardless — that's not
      a "mobile version," it's just the page not breaking when a phone visits — so a
@@ -364,15 +370,17 @@ ffmpeg -i src.mp4 -an -vf "unsharp=5:5:0.8:5:5:0.0" \
 
 Encode all 2N-1 clips (dives + connectors) with the same settings for uniform quality.
 
-**Mobile encodes (beta — only if the user opted in at Step 1.5).** Phone video decoders seek
-far slower than a laptop's, and seek cost scales with GOP length, so the 1080p `-g 8` master
-that scrubs smoothly on desktop can stutter on a phone. Produce a lighter `-m.mp4` sibling for
-every clip — **720p, `-g 4`** (more keyframes = cheaper seeks), crf 23 — and wire them as
-`clipMobile` / `connectorsMobile` (Step 7). The engine serves them automatically on phones and
-falls back to the desktop clip when absent. The exact `encm()` script is in
-`references/pipeline.md` §6. If the user chose desktop-only, skip this — the engine still
-hardens phone scrubbing regardless (seek-coalescing, iOS priming), so the page degrades
-gracefully rather than breaking.
+**Mobile encodes (beta — only if the user opted in at Step 1.5).** The mobile version is
+the **native 9:16 portrait chain** (pipeline.md §6b): portrait renders of every dive and
+connector, encoded **720 wide (`scale=720:-2`), `-g 4`** (more keyframes = cheaper seeks —
+phone decoders' seek cost scales with GOP length), crf 23 — wired as `clipMobile` /
+`connectorsMobile`, with each portrait dive's first frame extracted as the section's
+`stillMobile` poster (Step 7). The engine serves them automatically on phones and falls
+back to the desktop clip when absent. The 16:9 centre-crop `encm()` encodes
+(pipeline.md §6) are a **fallback only** — for when credits can't cover the portrait
+chain — and shipping them must be called out to the user, never silent. If the user chose
+desktop-only, skip this — the engine still hardens phone scrubbing regardless
+(seek-coalescing, iOS priming), so the page degrades gracefully rather than breaking.
 
 ---
 
@@ -388,7 +396,9 @@ mountScrollWorld(document.getElementById('world'), {
   diveScroll: 1.3, connScroll: 0.9,          // viewport-heights of scroll per clip
   sections: [
     { id:'farm', label:'The Farms', still:'assets/farm.webp',
-      clip:'assets/vid/farm.mp4', clipMobile:'assets/vid/farm-m.mp4',   // mobile beta only
+      clip:'assets/vid/farm.mp4',
+      clipMobile:'assets/vid/farm-m.mp4',      // mobile beta only: native 9:16 render
+      stillMobile:'assets/farm-m.webp',        // its first frame as the portrait poster
       scroll: 1.6, linger: 0.45,   // optional pacing: longer dwell + camera settles mid-scene
       accent:'#8FB98A', eyebrow:'From leaf to last sip', title:'It starts in the hills.',
       body:'…', tags:['Single-origin','Hand-picked'] },
@@ -446,12 +456,15 @@ is the thing most likely to be wrong:
     over the instant you scroll — no blank/black scene (the iOS priming fix). Test iOS Safari
     specifically; it's the one that goes blank if this regresses.
   - Verify the `-m.mp4` variant is actually served on mobile (Network panel), and the
-    heavy 1080p master on desktop.
+    heavy 1080p master on desktop. The mobile clips must be **natively portrait**
+    (`videoWidth < videoHeight` — not a downscaled 16:9 file), and the `stillMobile`
+    posters must be served and match each portrait clip's first frame (no
+    landscape→portrait flash when the video paints).
   - Slowly scroll so the URL bar collapses — the page must **not jump** (height-only resizes
     are ignored on touch). Rotate the device — layout should recompose cleanly.
-  - Portrait crops a 16:9 clip to its centre; confirm the focal subject still reads. If a
-    hero scene's subject sits off-centre and gets cut, recompose it (prompts.md) or generate
-    a 9:16 variant for that scene.
+  - Only if the crop **fallback** shipped (no credits for the portrait chain): portrait
+    crops a 16:9 clip to its centre — confirm the focal subject still reads, and remind
+    the user this is the stopgap, not the mobile version.
 - Check reduced-motion (should fall back to the stills, no video, no particles).
 
 ---
@@ -506,10 +519,11 @@ is the thing most likely to be wrong:
 - **Copy hidden behind the URL bar / notch on mobile** → use the engine's safe-area-aware
   bottom offset (`env(safe-area-inset-bottom)` + `dvh`); make sure the page's
   `<meta viewport>` includes `viewport-fit=cover` (the template does).
-- **Portrait crops the scene** → a 16:9 clip on a tall phone shows only its centre. Keep each
-  scene's focal subject centred with a little headroom (prompts.md), or generate a 9:16 hero
-  for the scenes that matter most. The engine centre-crops (`object-fit:cover`); it can't
-  un-crop a widescreen composition.
+- **Portrait crops the scene** → a 16:9 clip on a tall phone shows only its centre — which
+  is why the mobile version is the native 9:16 chain (§6b), never the crop. If you're seeing
+  this on a mobile build, either the crop fallback shipped (call it out to the user) or the
+  9:16 encodes aren't actually being served (check `videoWidth < videoHeight`). Keeping each
+  scene's focal subject centred (prompts.md) still matters for the desktop film itself.
 - **`--generate-audio` errors on seedance** → omit it; mute in HTML and `-an` on encode.
 - **Kling rejects your flags** → `kling3_0` has **no `--resolution` param** (don't pass
   one; encode at whatever native res ffprobe reports) and **sound defaults on** — pass
@@ -521,6 +535,10 @@ is the thing most likely to be wrong:
 - **White-box scenes** → `gpt_image_2` returns a solid bg; either match the page bg to it
   or knock it out (Step 3).
 - **bash 3.2** on macOS → no associative arrays in scripts.
+- **Connector grabs the wrong scene's frames** (or errors on a frame that doesn't exist
+  yet) → the array loop ran in **zsh** (macOS default interactive shell), where arrays are
+  1-indexed, not bash's 0-indexed. Keep every array-driven chain step in a `#!/bin/bash`
+  script run via `bash script.sh` — never inline array loops in the interactive shell.
 
 ## References
 

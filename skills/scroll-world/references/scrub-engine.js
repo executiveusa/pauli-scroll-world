@@ -15,7 +15,7 @@
        nav: true,         // show the top section nav
        atmosphere: true,  // subtle gradient + drifting particles behind the clips
        sections: [
-         { id, label, still, clip, clipMobile, accent,
+         { id, label, still, stillMobile, clip, clipMobile, accent,
            scroll: 1.6,   // optional per-section override of diveScroll — more scroll
                           // distance = a slower, longer dwell in this scene
            linger: 0.5,   // optional 0..1 — remaps time so the camera settles mid-scene
@@ -35,6 +35,10 @@
          tighter-GOP — seek cost on a phone decoder is dominated by frames-from-keyframe,
          so a 720p, -g 4 file scrubs far smoother than the 1080p desktop master; see
          pipeline.md). Falls back to the desktop `clip` if no mobile variant is given.
+       - uses `stillMobile` as the scene poster when provided (pair it with native 9:16
+         clipMobile renders so the poster matches the portrait video's first frame instead
+         of flashing from a landscape crop). Chosen once at mount; a desktop resize into
+         phone width keeps the desktop poster (clips still switch via isMobile()).
        - coalesces seeks (never issues a new currentTime while the decoder is still
          `seeking`) so fast flicks can't pile up and freeze the video.
        - keeps the still as a live poster until the clip actually paints its first frame,
@@ -82,8 +86,8 @@ function mountScrollWorld(container, config) {
   // ---- build the interleaved segment chain: dive0, conn0, dive1, … diveN-1 ----
   const SEGMENTS = [];
   SECTIONS.forEach((s, i) => {
-    const dive = { kind: 'dive', si: i, clip: s.clip, clipM: s.clipMobile, still: s.still, accent: s.accent,
-                   w: s.scroll || DIVE_W, linger: s.linger || 0 };
+    const dive = { kind: 'dive', si: i, clip: s.clip, clipM: s.clipMobile, still: s.still, stillM: s.stillMobile,
+                   accent: s.accent, w: s.scroll || DIVE_W, linger: s.linger || 0 };
     SEGMENTS.push(dive);
     s._seg = dive;
     // A connector is optional: if connectors[i] is falsy, the two dives simply
@@ -91,7 +95,8 @@ function mountScrollWorld(container, config) {
     // connector can't be generated (e.g. a content-filter false-positive).
     if (i < N - 1 && CONNECTORS[i]) {
       SEGMENTS.push({ kind: 'conn', si: i, clip: CONNECTORS[i], clipM: CONNECTORS_M[i],
-                      still: SECTIONS[i + 1].still, accent: SECTIONS[i + 1].accent, w: CONN_W });
+                      still: SECTIONS[i + 1].still, stillM: SECTIONS[i + 1].stillMobile,
+                      accent: SECTIONS[i + 1].accent, w: CONN_W });
     }
   });
   const NSEG = SEGMENTS.length;
@@ -134,7 +139,8 @@ function mountScrollWorld(container, config) {
   SEGMENTS.forEach(s => {
     const scene = el('div', 'sw-scene'); scene.style.setProperty('--sw-accent', s.accent || '');
     const img = el('img', 'sw-scene__still'); img.alt = ''; img.decoding = 'async'; img.loading = 'lazy';
-    if (s.still) img.src = s.still;
+    const poster = (isMobile() && s.stillM) ? s.stillM : s.still;
+    if (poster) img.src = poster;
     scene.appendChild(img); stage.appendChild(scene);
     s.el = scene; s.img = img; s.video = null; s.hasClip = false;
     s.loading = false; s.ready = false; s.cur = 0; s.target = 0; s.visible = false;
