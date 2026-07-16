@@ -35,3 +35,18 @@ changed: shared/{model-router,fal-client,hf-client,job-store,self-improve}.js, s
 tests: router unit checks, license encrypt/decrypt roundtrip, live server smoke (6 routes), self-improve run with synthetic lessons — all passed
 risks: Stripe/Creem/LND calls are schema-correct but unexercised against live APIs (no keys by design); reconcile PRICES vs invoices after first live month
 next: Phase 2 — six stage CONTEXT.md contracts + stage scripts (incl. quality gate tooling)
+
+## Phase 2 — Stage contracts ✅
+facts:
+  - All six CONTEXT.md contracts follow the ICM Inputs/Process/Outputs format; 01 and 06 carry explicit HALT gates (Bambu approval).
+  - E2E stub-mode chain verified: scene-planner (5 beats, Krug limits enforced at generation) → style-preamble (one locked sentence) → fal-pipeline --draft (stub testsrc renders) → --extract-frames (seam lock) → --encode (GOP8 + mobile GOP4) → proposal-es.md (Spanish, MXN) → delivery-package.zip (encrypted source + preview + auditable decrypt.js) → client-side decrypt roundtrip OK.
+  - cost-guard verified: $15 estimate → exit 2 (task gate); ledger-based daily accounting.
+  - krug-checker + udec-scorer runnable; both PASS on stage tree; ffmpeg + zip installed in container (already in Dockerfile).
+decisions:
+  - CPY axis of UDEC is driven directly by krug-checker findings (single source of copy truth).
+  - udec-scorer is the heuristic half; model review pass scores same axes, LOWER governs (documented in udec-axes.md).
+  - Stub video = ffmpeg testsrc2 so downstream (frames/encode/assembly) exercises real files, not empty placeholders.
+changed: stages/01_intake/{CONTEXT.md,prd-template.md}, stages/02_world_bible/{CONTEXT.md,scene-planner.js,style-preamble.js}, stages/03_generate/{CONTEXT.md,fal-pipeline.sh,hf-fallback.sh,cost-guard.js}, stages/04_assemble/CONTEXT.md, stages/05_quality/{CONTEXT.md,krug-checker.js,udec-scorer.js}, stages/06_package/{CONTEXT.md,proposal-generator.js,license-packager.js}
+tests: full stub-mode pipeline run stages 02→03→06 + decrypt roundtrip + both quality gates PASS
+risks: udec-scorer heuristics are conservative; model review pass (not runnable offline) is the second half of the gate by design
+next: Phase 3 — five workflow sub-pipelines under stages/04_assemble/workflows/
