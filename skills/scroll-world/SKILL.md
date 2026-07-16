@@ -89,14 +89,14 @@ default. Cover:
    the hero product. Each section needs: a short subject description (what's IN the
    diorama), an eyebrow, a headline, one line of body, and 0–3 tag pills. The last
    section is usually the hero product + the CTA.
-5. **Mobile version (beta) — ALWAYS ask this; never silently generate both.** Ask as a
+5. **Mobile version — ALWAYS ask this; never silently generate both.** Ask as a
    two-option choice (`AskUserQuestion` in Claude Code; a plain question elsewhere):
-   *"Want a mobile-optimized version too? Mobile support is in **beta** — the scroll-scrub
-   mechanic is desktop-native. The mobile version is a second camera chain rendered
-   natively in **9:16 portrait** — composed for phones, not a crop of the landscape film —
-   which roughly doubles the Higgsfield credit spend (state the estimated number)."*
-   Options: "Desktop only" / "Desktop + mobile (beta, native 9:16 — ~2× credits)". The
-   beta disclaimer and the credit cost must be stated to the user, not just implied.
+   *"Want a mobile-optimized version too? The mobile version is a second camera chain
+   rendered natively in **9:16 portrait** — composed for phones, not a crop of the
+   landscape film — which roughly doubles the Higgsfield credit spend (state the
+   estimated number)."*
+   Options: "Desktop only" / "Desktop + mobile (native 9:16 — ~2× credits)". The
+   credit cost must be stated to the user, not just implied.
    What the answer gates:
    - **Yes** → render the parallel 9:16 portrait chain and ship it as the mobile variants
      (Step 6 / pipeline.md §6b): portrait start canvases → 9:16 dives + connectors
@@ -370,7 +370,7 @@ ffmpeg -i src.mp4 -an -vf "unsharp=5:5:0.8:5:5:0.0" \
 
 Encode all 2N-1 clips (dives + connectors) with the same settings for uniform quality.
 
-**Mobile encodes (beta — only if the user opted in at Step 1.5).** The mobile version is
+**Mobile encodes (only if the user opted in at Step 1.5).** The mobile version is
 the **native 9:16 portrait chain** (pipeline.md §6b): portrait renders of every dive and
 connector, encoded **720 wide (`scale=720:-2`), `-g 4`** (more keyframes = cheaper seeks —
 phone decoders' seek cost scales with GOP length), crf 23 — wired as `clipMobile` /
@@ -397,7 +397,7 @@ mountScrollWorld(document.getElementById('world'), {
   sections: [
     { id:'farm', label:'The Farms', still:'assets/farm.webp',
       clip:'assets/vid/farm.mp4',
-      clipMobile:'assets/vid/farm-m.mp4',      // mobile beta only: native 9:16 render
+      clipMobile:'assets/vid/farm-m.mp4',      // mobile opt-in only: native 9:16 render
       stillMobile:'assets/farm-m.webp',        // its first frame as the portrait poster
       scroll: 1.6, linger: 0.45,   // optional pacing: longer dwell + camera settles mid-scene
       accent:'#8FB98A', eyebrow:'From leaf to last sip', title:'It starts in the hills.',
@@ -405,7 +405,7 @@ mountScrollWorld(document.getElementById('world'), {
     // …one per section; last may carry a `cta`
   ],
   connectors:       ['assets/vid/conn1.mp4','assets/vid/conn2.mp4',   /* … length = sections-1 */],
-  connectorsMobile: ['assets/vid/conn1-m.mp4','assets/vid/conn2-m.mp4' /* … same length; mobile beta only */],
+  connectorsMobile: ['assets/vid/conn1-m.mp4','assets/vid/conn2-m.mp4' /* … same length; mobile opt-in only */],
 });
 ```
 
@@ -427,8 +427,8 @@ freezing the clip), **keeps the still as a poster until the clip paints its firs
 and **primes each video on first touch** (fixes iOS's blank-until-played video), drops the
 drifting particles, ignores URL-bar-only resizes (no scroll jump), and uses safe-area
 insets so copy clears the notch/home indicator. All of this hardening is on by default —
-no config needed. The `clipMobile`/`connectorsMobile` encodes are the opt-in **mobile
-beta** part (Step 1.5): only wire them when the user asked for the mobile version.
+no config needed. The `clipMobile`/`connectorsMobile` encodes are the opt-in part
+(Step 1.5): only wire them when the user asked for the mobile version.
 
 For non-JS backends (Python/Rails/etc.): serve the assets and drop the engine `<script>`
 into the rendered HTML; nothing about it is framework-specific.
@@ -446,10 +446,10 @@ is the thing most likely to be wrong:
   the crossfade band is too short.
 - Check the console for errors, confirm `video.seekable.end(0) > 0` (blob working), and
   that `currentTime` tracks scroll across each clip's band.
-- **Mobile — full checklist only if the user opted into the mobile beta (Step 1.5).**
+- **Mobile — full checklist only if the user opted into the mobile version (Step 1.5).**
   For a desktop-only build, just sanity-check a phone viewport once: page loads, still
   posters show, nothing overlaps — the engine's hardening covers graceful degradation.
-  For the beta (do this on a real phone or an emulated one, portrait + landscape):
+  For the mobile build (do this on a real phone or an emulated one, portrait + landscape):
   - Emulate a phone viewport **with CPU throttled 4–6×** and scroll fast — the clip should
     track without freezing (the seek-coalescing + `-m.mp4` encodes are what make this hold).
   - Confirm the first scene shows immediately (its still is the poster) and the video takes

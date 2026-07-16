@@ -28,7 +28,7 @@
        connectors: [clipUrl, …],          // length = sections.length - 1 (nulls allowed)
        connectorsMobile: [clipUrl, …],    // optional lighter connectors for phones (same length)
 
-   MOBILE (the clipMobile/connectorsMobile variants are the opt-in "mobile beta";
+   MOBILE (the clipMobile/connectorsMobile variants are the opt-in mobile version;
    the rest of the phone handling below is always on)
      The engine is phone-aware out of the box: on a coarse-pointer / ≤860px viewport it
        - loads `clipMobile` / `connectorsMobile` when provided (encode these smaller +
