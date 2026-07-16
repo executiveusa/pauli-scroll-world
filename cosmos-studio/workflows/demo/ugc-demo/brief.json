@@ -1,0 +1,12 @@
+{
+  "brand_name": "Café Cometa",
+  "pitch": "Specialty coffee subscription roasted in CDMX — UGC ads for TikTok and Reels in Spanish and English.",
+  "industry": "food",
+  "audience": "coffee-curious professionals 25-40, CDMX + US hispanic market",
+  "tone": ["warm", "authentic", "unpolished"],
+  "budget_tier": "growth",
+  "languages": ["es", "en"],
+  "palette": ["#c96f4a", "#f3e9dc"],
+  "market_id": "mexico",
+  "workflow": "ugc-ads"
+}

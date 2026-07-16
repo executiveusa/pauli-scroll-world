@@ -1,0 +1,30 @@
+{
+  "lang": "es",
+  "hero": { "title": "El scroll es la cámara.", "sub": "Tu marca, como un mundo." },
+  "beats": [
+    { "label": "Llegada", "eyebrow": "COSMOS Studio", "title": "El scroll es la cámara.", "body": "Tu marca, como un mundo. Haz scroll — la cámara ya está en movimiento." },
+    { "label": "Brief", "eyebrow": "Paso uno", "title": "Cuéntanos la historia", "body": "Un brief. Lo convertimos en escenas, textos y un recorrido de cámara." },
+    { "label": "Producción", "eyebrow": "Paso dos", "title": "Las máquinas renderizan", "body": "Escenas, vuelos y conexiones sin cortes — con control de calidad en cada pase." },
+    { "label": "Mundos", "eyebrow": "No solo webs", "title": "Cinco líneas de producción", "body": "Sitios scroll, anuncios UGC, anime, documentales, YouTube sin rostro. Un mismo motor." },
+    { "label": "Empieza", "eyebrow": "Días, no meses", "title": "Crea tu mundo", "body": "El anticipo lo inicia. Tres meses después es tuyo para siempre.", "cta": "Crea tu mundo" }
+  ],
+  "nav": { "pricing": "Precios", "demos": "Demos", "start": "Empezar" },
+  "pricing": {
+    "title": "Tuyo. Nunca alquilado.",
+    "plan": "Tuyo en 3 meses. Paga mientras creces. Quédatelo para siempre.",
+    "tiers": [
+      { "name": "Starter", "price": "desde $900 USD", "scope": ["4–5 escenas", "Escritorio", "1 idioma"] },
+      { "name": "Growth", "price": "desde $1,750 USD", "scope": ["6–7 escenas", "Móvil afinado", "Bilingüe"] },
+      { "name": "Flagship", "price": "desde $3,200 USD", "scope": ["1080p completo", "Pack de anuncios UGC", "Deploy incluido"] }
+    ],
+    "buy": "Comprar el estudio"
+  },
+  "compute": { "title": "Tu propio GPU", "body": "Los renders corren en GPU en la nube que tú controlas. Recomendamos RunPod o Vast.ai — con nuestro enlace ahorramos los dos.", "runpod": "Abrir RunPod", "vast": "Abrir Vast.ai" },
+  "demos": { "title": "Míralo funcionando", "watch": "Ver demo", "items": ["Anime — Foxies Casino 2056", "UGC — marca de café", "Documental — Puerto Rico", "YouTube sin rostro — tech"] },
+  "form": {
+    "title": "Crea tu mundo",
+    "brand": "Marca", "pitch": "¿Qué vamos a crear?", "industry": "Industria", "audience": "Audiencia", "tier": "Plan",
+    "send": "Enviar el brief", "sent": "Brief recibido. Respondemos en un día hábil."
+  },
+  "counter": "ESCENA"
+}

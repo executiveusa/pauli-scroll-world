@@ -1,0 +1,8 @@
+{
+  "dag": "../../../stages/04_assemble/workflows/anime-dag.yaml",
+  "world_bible": "./world-bible.md",
+  "scene_types": { "strip": "establishing", "doors": "action", "vex": "dialogue", "heist": "action", "dawn": "landscape" },
+  "continuity_anchor": "lucky chip prop in every scene",
+  "output": "./output/final.mp4",
+  "quality_floor": 8.5
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 90" role="img" aria-label="el-yunque placeholder">
+<defs><radialGradient id="g" cx="54%" cy="32%" r="90%"><stop offset="0%" stop-color="#7b93b5"/><stop offset="60%" stop-color="#1a1524"/><stop offset="100%" stop-color="#0d0b12"/></radialGradient></defs>
+<rect width="160" height="90" fill="url(#g)"/>
+<ellipse cx="76" cy="72" rx="36" ry="7" fill="#000" opacity=".4"/>
+<rect x="58" y="38" width="26" height="34" rx="3" fill="#7b93b5" opacity=".5"/>
+<circle cx="102" cy="32" r="10" fill="#7b93b5" opacity=".6"/>
+<text x="80" y="85" font-family="monospace" font-size="6" fill="#a89fb3" text-anchor="middle">el-yunque — placeholder, replaced by stage 03</text>
+</svg>

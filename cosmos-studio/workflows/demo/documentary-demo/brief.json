@@ -1,0 +1,11 @@
+{
+  "brand_name": "Descubre Puerto Rico",
+  "pitch": "A short tourism documentary about Puerto Rico beyond the resorts — real voices, real streets, Spanish first.",
+  "industry": "tourism",
+  "audience": "US and LATAM travelers planning a Caribbean trip",
+  "tone": ["warm", "observational", "proud"],
+  "budget_tier": "growth",
+  "languages": ["es", "en"],
+  "market_id": "puerto-rico",
+  "workflow": "documentary"
+}

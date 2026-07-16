@@ -1,0 +1,12 @@
+{
+  "brand_name": "Yappyverse",
+  "pitch": "An anime short set in the Foxies Casino on the Las Vegas Strip of 2056 — neon heist, fox-eared cast, one lucky chip.",
+  "industry": "entertainment",
+  "audience": "anime and animation fans, 16-34",
+  "tone": ["neo-noir", "playful", "kinetic"],
+  "budget_tier": "flagship",
+  "languages": ["en"],
+  "palette": ["#14b8a6", "#d946ef", "#0b0e1a"],
+  "market_id": "us-en",
+  "workflow": "anime-dag"
+}
