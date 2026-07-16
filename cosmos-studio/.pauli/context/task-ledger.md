@@ -65,3 +65,16 @@ changed: stages/04_assemble/workflows/{scroll-cinematic.js,ugc-ads.js,anime-dag.
 tests: all 4 runnable workflows executed stub-mode end-to-end; scroll-cinematic deliverable passed KRUG + UDEC (9.79)
 risks: anime DAG needs a Forge-film runner in prod; documentary needs the StoryToolkitAI fork cloned to vendor/
 next: Phase 4 — landing/index.html (EN/ES/SR single file, scroll-world demo built in)
+
+## Phase 4 — Landing page ✅
+facts:
+  - Single file, EN/ES/SR toggle inline (locales/*.json mirror the inline dicts); scroll-world demo mounts on load with 5 SVG-diorama scenes (zero video weight); total page 20KB + 32KB engine → well under 3s mobile.
+  - Film frame counter ticks with scroll (frame + scene number, per-locale label); hero split h1 "The scroll is the camera." + sub keeps Krug's 9-word headline law while preserving the mandated copy.
+  - Gates: KRUG PASS, UDEC 9.86 (all axes ≥ 9). Browser-verified in Chromium: mount, SR/ES toggle (lang attr updates), pricing tiers per locale, frame counter, form → /api/brief with offline fallback, mobile 390px view. Two defects found and fixed via screenshots: white-on-light top CTA (dark-theme token flip), engine end-copy bleeding over pricing (ground z-index + past-world fade).
+decisions:
+  - Demo scenes are inline SVG stills (engine still-mode with cross-dissolve) instead of video clips — the real clips get dropped in post-generation; keeps the revenue page instant-loading.
+  - Form market mapping: sr→serbia-balkans, es→mexico, en→us-en (client can override in conversation).
+changed: landing/{index.html,scrub-engine.js(vendored copy),locales/{en,es,sr}.json}
+tests: KRUG+UDEC gates, Playwright render tests (desktop, mobile, i18n, form)
+risks: none blocking
+next: Phase 5 — four pre-built demo packages

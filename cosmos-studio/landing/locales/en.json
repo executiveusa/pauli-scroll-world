@@ -1,0 +1,30 @@
+{
+  "lang": "en",
+  "hero": { "title": "The scroll is the camera.", "sub": "Your brand, as a world." },
+  "beats": [
+    { "label": "Arrival", "eyebrow": "COSMOS Studio", "title": "The scroll is the camera.", "body": "Your brand, as a world. Scroll — the camera is already moving." },
+    { "label": "Brief", "eyebrow": "Step one", "title": "Tell us the story", "body": "One brief. We turn it into scenes, copy, and a camera path." },
+    { "label": "Build", "eyebrow": "Step two", "title": "Machines do the rendering", "body": "Stills, flights, seamless connectors — quality-gated at every pass." },
+    { "label": "Worlds", "eyebrow": "Not just websites", "title": "Five production lines", "body": "Scroll sites, UGC ads, anime, documentaries, faceless YouTube. Same engine." },
+    { "label": "Begin", "eyebrow": "Days, not months", "title": "Start your world", "body": "Down payment starts it. Three months later you own it forever.", "cta": "Start your world" }
+  ],
+  "nav": { "pricing": "Pricing", "demos": "Demos", "start": "Start" },
+  "pricing": {
+    "title": "Own it. Never rent it.",
+    "plan": "Own it in 3 months. Pay as you grow. Keep it forever.",
+    "tiers": [
+      { "name": "Starter", "price": "$1,800", "scope": ["4–5 scenes", "Desktop", "1 language"] },
+      { "name": "Growth", "price": "$3,500", "scope": ["6–7 scenes", "Mobile-tuned", "Bilingual"] },
+      { "name": "Flagship", "price": "$6,500+", "scope": ["Full 1080p", "UGC ad pack", "Deploy included"] }
+    ],
+    "buy": "Buy the studio"
+  },
+  "compute": { "title": "Bring your own GPU", "body": "Renders run on cloud GPU you control. We recommend RunPod or Vast.ai — our referral links save us both money.", "runpod": "Open RunPod", "vast": "Open Vast.ai" },
+  "demos": { "title": "See it working", "watch": "Watch a demo", "items": ["Anime — Foxies Casino 2056", "UGC — coffee brand", "Documentary — Puerto Rico", "Faceless YouTube — tech"] },
+  "form": {
+    "title": "Start your world",
+    "brand": "Brand name", "pitch": "What are we making?", "industry": "Industry", "audience": "Audience", "tier": "Tier",
+    "send": "Send the brief", "sent": "Brief received. We reply within one business day."
+  },
+  "counter": "SCENE"
+}
