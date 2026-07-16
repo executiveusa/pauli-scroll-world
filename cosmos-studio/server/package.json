@@ -1,0 +1,16 @@
+{
+  "name": "cosmos-studio-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "COSMOS Studio REST API — the surface Hermes calls (POST /api/brief → poll → webhook → Bambu approves).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "self-improve": "node ../shared/self-improve.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "express": "^4.19.0"
+  }
+}

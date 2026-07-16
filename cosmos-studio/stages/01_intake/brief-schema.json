@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cosmos-studio/brief",
+  "title": "COSMOS Studio intake brief",
+  "type": "object",
+  "required": ["brand_name", "pitch", "industry", "audience", "budget_tier"],
+  "properties": {
+    "brand_name": { "type": "string", "description": "Client brand name as it should appear on the site" },
+    "pitch": { "type": "string", "description": "One-paragraph description of the brand and what the deliverable should achieve" },
+    "industry": { "type": "string", "description": "e.g. hospitality, fintech, fashion" },
+    "audience": { "type": "string", "description": "Who this must convince" },
+    "tone": { "type": "array", "items": { "type": "string" }, "description": "e.g. [\"warm\", \"premium\", \"playful\"]" },
+    "budget_tier": { "type": "string", "enum": ["starter", "growth", "flagship"], "description": "Pricing tier from the market config" },
+    "languages": { "type": "array", "items": { "type": "string" }, "description": "Deliverable languages, e.g. [\"es\", \"en\"]" },
+    "palette": { "type": "array", "items": { "type": "string" }, "description": "Optional brand hex colors" },
+    "scenes": { "type": "array", "items": { "type": "string" }, "description": "Optional client-suggested scene beats" },
+    "add_ons": { "type": "array", "items": { "type": "string" }, "description": "e.g. [\"ugc-ads\", \"cyrillic-toggle\"]" },
+    "market_id": { "type": "string", "description": "One of _config/markets/*.md; auto-detected from Accept-Language when omitted" },
+    "workflow": { "type": "string", "enum": ["scroll-cinematic", "ugc-ads", "anime-dag", "documentary", "faceless-youtube"], "description": "Optional explicit workflow; keyword-routed when omitted" }
+  }
+}

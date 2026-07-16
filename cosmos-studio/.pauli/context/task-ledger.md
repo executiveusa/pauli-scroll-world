@@ -19,3 +19,19 @@ changed: docs/agent-system/{tool-registry,api-registry,hermes-AGENTS,pauli-effec
 tests: n/a (docs phase) — quality gate scripts arrive in Phase 2; retroactive gate run scheduled at Phase 7 verification
 risks: none blocking
 next: Phase 1 — shared/ infrastructure + server API + .env.example + docker-compose
+
+## Phase 1 — Core infrastructure ✅
+facts:
+  - routeModel() covers 7 tiers / 3+ providers with error-failover, budget downgrade, quality upgrade; dry-run route returned (with missing keyEnv named) when no keys configured.
+  - All paid calls stub cleanly without keys, marked "// STUB: replace with live call after .env is configured".
+  - license-lock: HMAC-derived rotating keys (no key material on disk), AES-256-GCM zip encryption verified round-trip, 7-day grace → read-only (never deletes data).
+  - Server verified live: /healthz, POST /api/brief (validates against brief-schema.json, names missing fields), market forcing, workflow keyword routing, /api/jobs/:id, /api/approve state transitions, /api/metrics.
+  - self-improve verified: 4 synthetic lessons → 2 targeted proposals; never auto-applies; n8n notify stubs without key.
+decisions:
+  - brief-schema.json written in this phase (server boot dependency) though architecture lists it under stage 01.
+  - /api/approve auth = PAULI_API_KEY; Hermes structurally excluded (holds HERMES_API_KEY only). Missing keys in dev → route allowed but response tagged x-cosmos-auth: stub.
+  - Payment webhook is the only raw-body route (signature over raw bytes); Stripe + Creem HMAC verification with timingSafeEqual.
+changed: shared/{model-router,fal-client,hf-client,job-store,self-improve}.js, shared/payment/{stripe,lightning,license-lock}.js, server/{index.js,package.json,routes/*}, stages/01_intake/brief-schema.json, .env.example, Dockerfile, docker-compose.yml, .gitignore
+tests: router unit checks, license encrypt/decrypt roundtrip, live server smoke (6 routes), self-improve run with synthetic lessons — all passed
+risks: Stripe/Creem/LND calls are schema-correct but unexercised against live APIs (no keys by design); reconcile PRICES vs invoices after first live month
+next: Phase 2 — six stage CONTEXT.md contracts + stage scripts (incl. quality gate tooling)

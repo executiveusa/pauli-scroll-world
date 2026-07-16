@@ -1,0 +1,44 @@
+# COSMOS Studio — full stack
+#   docker-compose up            → API on :3000, landing on :8080
+#   Keys: copy .env.example → .env first (stubs run fine without keys).
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - pauli-state:/app/.pauli          # job store + telemetry survive restarts
+      - ./stages:/app/stages             # stage outputs are edit surfaces — keep them on the host
+      - ./_config:/app/_config           # lessons.jsonl + license.json are runtime-written
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  landing:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./landing:/usr/share/nginx/html:ro
+      - ./skills:/usr/share/nginx/html/skills:ro   # scrub-engine.js served alongside
+    restart: unless-stopped
+
+  # Weekly self-improvement loop — Sunday 03:00 UTC (pauli-effect / P1-C).
+  cron:
+    build: .
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - echo '0 3 * * 0 cd /app && node shared/self-improve.js' | crontab - && crond -f -l 8
+    env_file:
+      - .env
+    volumes:
+      - ./_config:/app/_config
+    restart: unless-stopped
+
+volumes:
+  pauli-state:

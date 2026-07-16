@@ -1,0 +1,9 @@
+# secrets — never commit (pauli-secrets-vault pattern; .env.example is the template)
+.env
+_config/license.json
+
+# runtime state
+.pauli/jobs.json
+node_modules/
+stages/*/output/*
+!stages/*/output/.gitkeep
