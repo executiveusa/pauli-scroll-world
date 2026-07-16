@@ -89,3 +89,20 @@ changed: workflows/demo/** (16 files + stills), stages/05_quality/krug-checker.j
 tests: ugc-ads demo executed (8 stub variants); KRUG+UDEC PASS on demo tree and re-PASS on landing
 risks: none blocking
 next: Phase 6 — ad strategy for 6 markets
+
+## Phase 6 — Ad strategy ✅
+facts: all 6 markets covered (5 active + governed activation template for tbd-slot-1); each has platform mix %, market-config-aligned UGC character, 3 PAS hooks, wealthy-zip targeting, month 1-6 calendar, CPL/CVR/ROAS targets; budget governance ties into the Bambu $500 gate + self-improve loop + automatic kill rule.
+changed: docs/agent-system/ad-strategy.md
+tests: KRUG PASS
+next: Phase 7 — pricing doc + finalization
+
+## Phase 7 — Pricing + finalization ✅
+facts:
+  - pricing.md extends the original reference with payment-plan math, client-facing lock/unlock description, market-adjusted table, 7 add-ons, affiliate earnings estimate (~$70-90/mo at 20 clients), reseller tier ($15k or 6k+3.5k×3) with same lock rails.
+  - README.md at studio root: what it is, deploy (docker-compose), Hermes contract, how to sell, quality law.
+  - Completion checklist verified by script: 70 required files present and non-empty, routeModel exported, 3+ providers, PAULI_API_KEY on /api/approve, secret scan clean (env-var names only).
+  - Final gates: KRUG PASS on entire tree, UDEC 9.86 on landing, 10/10 docs.
+changed: docs/agent-system/pricing.md, README.md, .pauli/metrics/token-efficiency.jsonl, .pauli/handoffs/current.md
+tests: /tmp/checklist.sh (all green), full-tree quality sweep
+risks: live-API paths (Stripe/Creem/LND/fal/HF/ElevenLabs) are schema-correct but unexercised until keys exist; Forge-film runner + StoryToolkitAI fork are prod-hardening items
+next: fill .env, docker-compose up, point Hermes at POST /api/brief
