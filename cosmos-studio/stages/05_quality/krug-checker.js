@@ -82,9 +82,13 @@ function run(target) {
     const text = fs.readFileSync(file, 'utf8');
     if (/\.html?$/i.test(file)) checkHtml(file, text, findings);
     else if (/\.json$/i.test(file)) checkStructured(file, text, findings);
-    // .md/.txt: template/docs surfaces — headline law only on H1s
-    else for (const m of text.matchAll(/^# (.+)$/gm)) {
-      if (words(m[1]) > LIMITS.headline + 3) findings.push({ file, law: 5, element: `H1 "${m[1].slice(0, 40)}"`, problem: `${words(m[1])} words`, fix: 'Tighten the title.' });
+    // .md/.txt: template/docs surfaces — headline law only on H1s (fenced code blocks excluded:
+    // a "# comment" inside ```bash``` is shell, not a heading)
+    else {
+      const prose = text.replace(/```[\s\S]*?```/g, '');
+      for (const m of prose.matchAll(/^# (.+)$/gm)) {
+        if (words(m[1]) > LIMITS.headline + 3) findings.push({ file, law: 5, element: `H1 "${m[1].slice(0, 40)}"`, problem: `${words(m[1])} words`, fix: 'Tighten the title.' });
+      }
     }
   }
   return findings;

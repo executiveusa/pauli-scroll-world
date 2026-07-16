@@ -1,0 +1,11 @@
+{
+  "brand_name": "Plain Signal",
+  "pitch": "A faceless YouTube channel explaining consumer tech honestly — episode 1: why phone batteries degrade.",
+  "industry": "technology",
+  "audience": "general consumers who distrust tech marketing",
+  "tone": ["clear", "calm", "credible"],
+  "budget_tier": "starter",
+  "languages": ["en"],
+  "market_id": "us-en",
+  "workflow": "faceless-youtube"
+}

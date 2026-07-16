@@ -78,3 +78,14 @@ changed: landing/{index.html,scrub-engine.js(vendored copy),locales/{en,es,sr}.j
 tests: KRUG+UDEC gates, Playwright render tests (desktop, mobile, i18n, form)
 risks: none blocking
 next: Phase 5 — four pre-built demo packages
+
+## Phase 5 — Demo packages ✅
+facts:
+  - Four self-contained demos under workflows/demo/: anime (Yappyverse Foxies Casino 2056, DAG params + scene-list + locked preamble), ugc (Café Cometa bilingual ES/EN, 4×2 matrix — verified: run produced 8 stub variants), documentary (Isla Adentro Puerto Rico, ES primary, footage drop-in + shooting prompt), faceless-youtube (Plain Signal tech explainer, episode 1 pre-filled).
+  - Every demo: world-bible.md + brief.json + placeholder SVG stills (labeled "replaced by stage 03") + README with exact run command; all runnable without keys.
+decisions:
+  - krug-checker fix: markdown H1 scan now excludes fenced code blocks (bash "# comment" false positive found while gating demo READMEs).
+changed: workflows/demo/** (16 files + stills), stages/05_quality/krug-checker.js (code-fence fix)
+tests: ugc-ads demo executed (8 stub variants); KRUG+UDEC PASS on demo tree and re-PASS on landing
+risks: none blocking
+next: Phase 6 — ad strategy for 6 markets
