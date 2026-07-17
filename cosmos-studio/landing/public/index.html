@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="COSMOS Studio — scroll-cinematic websites, UGC ads, anime and documentaries. Own it in 3 months, keep it forever.">
+<title>COSMOS Studio — The scroll is the camera</title>
+<style>
+  :root{
+    --bg:#0d0b12; --ink:#f2eef7; --ink-soft:#a89fb3; --accent:#8a7bb5;
+    --card:#171321; --line:#2a2438; --gold:#d7a86e;
+  }
+  /* Engine theme override (engine CSS is in @layer sw — these win) */
+  .sw-root{--sw-bg:#0d0b12; --sw-ink:#f2eef7; --sw-ink-soft:#a89fb3; --sw-accent:#8a7bb5;}
+  .sw-nav{background:rgba(23,19,33,.6);}
+  .sw-route__label{background:rgba(23,19,33,.85); color:var(--ink);}
+  .sw-copy__tags li{background:rgba(138,123,181,.16); color:#cfc4e6;}
+  .sw-topcta{color:#141018;} /* dark theme: ink token is light, keep CTA text dark on it */
+
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;}
+  .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+  /* film frame counter */
+  .frame-counter{position:fixed;left:18px;bottom:18px;z-index:90;font-family:ui-monospace,Menlo,monospace;
+    font-size:.72rem;letter-spacing:.14em;color:var(--ink-soft);display:flex;gap:10px;align-items:center;pointer-events:none;}
+  .frame-counter b{color:var(--gold);font-weight:600;}
+  .frame-counter .reel{width:10px;height:10px;border-radius:50%;border:2px solid var(--gold);border-top-color:transparent;}
+
+  /* language toggle */
+  .lang-toggle{position:fixed;right:18px;bottom:18px;z-index:210;display:flex;gap:4px;padding:4px;border-radius:999px;
+    background:rgba(23,19,33,.78);backdrop-filter:blur(8px);border:1px solid var(--line);}
+  .lang-toggle button{font:600 .78rem/1 system-ui;border:0;background:transparent;color:var(--ink-soft);
+    padding:8px 12px;border-radius:999px;cursor:pointer;}
+  .lang-toggle button.on{background:var(--accent);color:#fff;}
+  .lang-toggle button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+  body.past-world .sw-route,body.past-world .sw-copylayer,body.past-world .sw-hint{opacity:0;pointer-events:none;transition:opacity .3s;}
+
+  /* ground sections (after the flight) — above the engine's fixed copylayer (z 20) */
+  .ground{position:relative;z-index:30;background:linear-gradient(180deg,transparent,var(--bg) 12%);}
+  .ground section{max-width:1040px;margin:0 auto;padding:clamp(56px,9vh,110px) clamp(20px,5vw,48px);}
+  .ground h2{font-size:clamp(1.7rem,3.6vw,2.6rem);line-height:1.08;margin:0 0 10px;letter-spacing:-.01em;}
+  .ground .kicker{display:block;font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
+  .ground p{color:var(--ink-soft);line-height:1.55;max-width:56ch;margin:.4em 0 0;}
+
+  .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:32px;}
+  .tier{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;}
+  .tier.hot{border-color:var(--accent);box-shadow:0 12px 40px rgba(138,123,181,.18);}
+  .tier h3{margin:0;font-size:1.02rem;color:var(--ink-soft);font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+  .tier .price{font-size:1.9rem;font-weight:700;margin:10px 0 14px;color:var(--ink);}
+  .tier ul{list-style:none;margin:0;padding:0;color:var(--ink-soft);line-height:1.9;font-size:.95rem;}
+  .tier ul li::before{content:"— ";color:var(--accent);}
+  .plan-line{margin-top:26px;font-size:1.05rem;color:var(--gold);}
+
+  .btn{display:inline-block;text-decoration:none;font-weight:600;font-size:.95rem;padding:13px 24px;border-radius:999px;
+    border:0;cursor:pointer;transition:transform .2s;}
+  .btn--primary{color:#141018;background:var(--gold);}
+  .btn--ghost{color:var(--ink);border:1.5px solid var(--line);background:transparent;}
+  .btn:hover{transform:translateY(-2px);}
+  .btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+
+  .demo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:28px;}
+  .demo-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;color:var(--ink-soft);font-size:.92rem;}
+  .demo-card b{display:block;color:var(--ink);margin-bottom:6px;font-size:1rem;}
+
+  dialog{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:28px;max-width:520px;width:92vw;}
+  dialog::backdrop{background:rgba(6,4,10,.7);backdrop-filter:blur(4px);}
+  dialog ul{list-style:none;margin:14px 0 0;padding:0;line-height:2;color:var(--ink-soft);}
+
+  form{display:grid;gap:14px;max-width:520px;margin-top:26px;}
+  label{display:grid;gap:6px;font-size:.86rem;color:var(--ink-soft);}
+  input,select,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;}
+  .form-note{font-size:.9rem;color:var(--gold);min-height:1.2em;}
+
+  footer{border-top:1px solid var(--line);padding:34px clamp(20px,5vw,48px);color:var(--ink-soft);font-size:.85rem;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;}
+  footer a{color:var(--ink-soft);}
+
+  @media (max-width:640px){ .frame-counter{display:none;} }
+  @media (prefers-reduced-motion:reduce){
+    .btn,.lang-toggle button,body.past-world .sw-route{transition:none;}
+    .frame-counter .reel{border-top-color:var(--gold);}
+  }
+</style>
+</head>
+<body>
+<h1 class="visually-hidden" data-i18n="hero.title">The scroll is the camera.</h1>
+<p class="visually-hidden" data-i18n="hero.sub">Your brand, as a world.</p>
+
+<main id="world" aria-label="COSMOS Studio"></main>
+
+<div class="frame-counter" aria-hidden="true"><span class="reel"></span><span><b id="fc-num">0001</b> · <span id="fc-scene">SCENE 01</span> · 24fps</span></div>
+
+<div class="lang-toggle" role="group" aria-label="Language / Idioma / Jezik">
+  <button data-lang="en" class="on" aria-label="English">EN</button>
+  <button data-lang="es" aria-label="Español">ES</button>
+  <button data-lang="sr" aria-label="Srpski">SR</button>
+</div>
+
+<div class="ground">
+  <section id="pricing" aria-labelledby="pricing-h">
+    <span class="kicker" data-i18n="nav.pricing">Pricing</span>
+    <h2 id="pricing-h" data-i18n="pricing.title">Own it. Never rent it.</h2>
+    <p class="plan-line" data-i18n="pricing.plan">Own it in 3 months. Pay as you grow. Keep it forever.</p>
+    <div class="tiers" id="tiers"></div>
+    <div class="cta-row">
+      <a class="btn btn--primary" href="#start" data-i18n="pricing.buy">Buy the studio</a>
+      <button class="btn btn--ghost" id="open-demos" data-i18n="demos.watch">Watch a demo</button>
+    </div>
+  </section>
+
+  <section id="compute" aria-labelledby="compute-h">
+    <span class="kicker">GPU</span>
+    <h2 id="compute-h" data-i18n="compute.title">Bring your own GPU</h2>
+    <p data-i18n="compute.body">Renders run on cloud GPU you control. We recommend RunPod or Vast.ai — our referral links save us both money.</p>
+    <div class="cta-row">
+      <a class="btn btn--ghost" href="https://runpod.io/?ref=kupuri" rel="noopener" data-i18n="compute.runpod">Open RunPod</a>
+      <a class="btn btn--ghost" href="https://vast.ai/?ref=kupuri" rel="noopener" data-i18n="compute.vast">Open Vast.ai</a>
+    </div>
+  </section>
+
+  <section id="demos" aria-labelledby="demos-h">
+    <span class="kicker" data-i18n="nav.demos">Demos</span>
+    <h2 id="demos-h" data-i18n="demos.title">See it working</h2>
+    <div class="demo-grid" id="demo-grid"></div>
+  </section>
+
+  <section id="start" aria-labelledby="start-h">
+    <span class="kicker" data-i18n="nav.start">Start</span>
+    <h2 id="start-h" data-i18n="form.title">Start your world</h2>
+    <form id="brief-form">
+      <label><span data-i18n="form.brand">Brand name</span><input name="brand_name" required autocomplete="organization"></label>
+      <label><span data-i18n="form.pitch">What are we making?</span><textarea name="pitch" rows="3" required></textarea></label>
+      <label><span data-i18n="form.industry">Industry</span><input name="industry" required></label>
+      <label><span data-i18n="form.audience">Audience</span><input name="audience" required></label>
+      <label><span data-i18n="form.tier">Tier</span>
+        <select name="budget_tier"><option value="starter">Starter</option><option value="growth" selected>Growth</option><option value="flagship">Flagship</option></select>
+      </label>
+      <div class="cta-row" style="margin-top:4px">
+        <button class="btn btn--primary" type="submit" data-i18n="form.send">Send the brief</button>
+      </div>
+      <p class="form-note" id="form-note" role="status"></p>
+    </form>
+  </section>
+
+  <footer>
+    <span>© Kupuri Media™ — COSMOS Studio</span>
+    <span><a href="#world">↑ top</a></span>
+  </footer>
+</div>
+
+<dialog id="demo-modal" aria-labelledby="demo-modal-h">
+  <h2 id="demo-modal-h" data-i18n="demos.title">See it working</h2>
+  <ul id="demo-modal-list"></ul>
+  <div class="cta-row"><button class="btn btn--ghost" id="close-demos">Close</button></div>
+</dialog>
+
+<script src="scrub-engine.js"></script>
+<script>
+/* ---------- locales (single-file: EN default, ES, SR — mirrors locales/*.json) ---------- */
+const LOCALES = {
+  en: {"hero":{"title":"The scroll is the camera.","sub":"Your brand, as a world."},"beats":[{"label":"Arrival","eyebrow":"COSMOS Studio","title":"The scroll is the camera.","body":"Your brand, as a world. Scroll — the camera is already moving."},{"label":"Brief","eyebrow":"Step one","title":"Tell us the story","body":"One brief. We turn it into scenes, copy, and a camera path."},{"label":"Build","eyebrow":"Step two","title":"Machines do the rendering","body":"Stills, flights, seamless connectors — quality-gated at every pass."},{"label":"Worlds","eyebrow":"Not just websites","title":"Five production lines","body":"Scroll sites, UGC ads, anime, documentaries, faceless YouTube. Same engine."},{"label":"Begin","eyebrow":"Days, not months","title":"Start your world","body":"Down payment starts it. Three months later you own it forever.","cta":"Start your world"}],"nav":{"pricing":"Pricing","demos":"Demos","start":"Start"},"pricing":{"title":"Own it. Never rent it.","plan":"Own it in 3 months. Pay as you grow. Keep it forever.","tiers":[{"name":"Starter","price":"$1,800","scope":["4–5 scenes","Desktop","1 language"]},{"name":"Growth","price":"$3,500","scope":["6–7 scenes","Mobile-tuned","Bilingual"]},{"name":"Flagship","price":"$6,500+","scope":["Full 1080p","UGC ad pack","Deploy included"]}],"buy":"Buy the studio"},"compute":{"title":"Bring your own GPU","body":"Renders run on cloud GPU you control. We recommend RunPod or Vast.ai — our referral links save us both money.","runpod":"Open RunPod","vast":"Open Vast.ai"},"demos":{"title":"See it working","watch":"Watch a demo","items":["Anime — Foxies Casino 2056","UGC — coffee brand","Documentary — Puerto Rico","Faceless YouTube — tech"]},"form":{"title":"Start your world","brand":"Brand name","pitch":"What are we making?","industry":"Industry","audience":"Audience","tier":"Tier","send":"Send the brief","sent":"Brief received. We reply within one business day."},"counter":"SCENE"},
+  es: {"hero":{"title":"El scroll es la cámara.","sub":"Tu marca, como un mundo."},"beats":[{"label":"Llegada","eyebrow":"COSMOS Studio","title":"El scroll es la cámara.","body":"Tu marca, como un mundo. Haz scroll — la cámara ya está en movimiento."},{"label":"Brief","eyebrow":"Paso uno","title":"Cuéntanos la historia","body":"Un brief. Lo convertimos en escenas, textos y un recorrido de cámara."},{"label":"Producción","eyebrow":"Paso dos","title":"Las máquinas renderizan","body":"Escenas, vuelos y conexiones sin cortes — con control de calidad en cada pase."},{"label":"Mundos","eyebrow":"No solo webs","title":"Cinco líneas de producción","body":"Sitios scroll, anuncios UGC, anime, documentales, YouTube sin rostro. Un mismo motor."},{"label":"Empieza","eyebrow":"Días, no meses","title":"Crea tu mundo","body":"El anticipo lo inicia. Tres meses después es tuyo para siempre.","cta":"Crea tu mundo"}],"nav":{"pricing":"Precios","demos":"Demos","start":"Empezar"},"pricing":{"title":"Tuyo. Nunca alquilado.","plan":"Tuyo en 3 meses. Paga mientras creces. Quédatelo para siempre.","tiers":[{"name":"Starter","price":"desde $900 USD","scope":["4–5 escenas","Escritorio","1 idioma"]},{"name":"Growth","price":"desde $1,750 USD","scope":["6–7 escenas","Móvil afinado","Bilingüe"]},{"name":"Flagship","price":"desde $3,200 USD","scope":["1080p completo","Pack de anuncios UGC","Deploy incluido"]}],"buy":"Comprar el estudio"},"compute":{"title":"Tu propio GPU","body":"Los renders corren en GPU en la nube que tú controlas. Recomendamos RunPod o Vast.ai — con nuestro enlace ahorramos los dos.","runpod":"Abrir RunPod","vast":"Abrir Vast.ai"},"demos":{"title":"Míralo funcionando","watch":"Ver demo","items":["Anime — Foxies Casino 2056","UGC — marca de café","Documental — Puerto Rico","YouTube sin rostro — tech"]},"form":{"title":"Crea tu mundo","brand":"Marca","pitch":"¿Qué vamos a crear?","industry":"Industria","audience":"Audiencia","tier":"Plan","send":"Enviar el brief","sent":"Brief recibido. Respondemos en un día hábil."},"counter":"ESCENA"},
+  sr: {"hero":{"title":"Scroll je kamera.","sub":"Tvoj brend, kao svet."},"beats":[{"label":"Dolazak","eyebrow":"COSMOS Studio","title":"Scroll je kamera.","body":"Tvoj brend, kao svet. Skroluj — kamera se već kreće."},{"label":"Brif","eyebrow":"Prvi korak","title":"Ispričaj nam priču","body":"Jedan brif. Mi ga pretvaramo u scene, tekst i putanju kamere."},{"label":"Produkcija","eyebrow":"Drugi korak","title":"Mašine renderuju","body":"Scene, letovi, prelazi bez reza — uz kontrolu kvaliteta u svakom prolazu."},{"label":"Svetovi","eyebrow":"Ne samo sajtovi","title":"Pet proizvodnih linija","body":"Scroll sajtovi, UGC reklame, anime, dokumentarci, YouTube bez lica. Isti motor."},{"label":"Počni","eyebrow":"Dani, ne meseci","title":"Napravi svoj svet","body":"Kapara pokreće posao. Tri meseca kasnije — zauvek je tvoje.","cta":"Napravi svoj svet"}],"nav":{"pricing":"Cene","demos":"Demo","start":"Počni"},"pricing":{"title":"Tvoje. Nikad iznajmljeno.","plan":"Tvoje za 3 meseca. Plaćaš dok rasteš. Ostaje ti zauvek.","tiers":[{"name":"Starter","price":"od €600","scope":["4–5 scena","Desktop","1 jezik"]},{"name":"Growth","price":"od €1.200","scope":["6–7 scena","Mobilna verzija","Dvojezično"]},{"name":"Flagship","price":"od €2.200","scope":["Pun 1080p","UGC paket reklama","Deploy uključen"]}],"buy":"Kupi studio"},"compute":{"title":"Tvoj GPU","body":"Renderi rade na cloud GPU koji ti kontrolišeš. Preporučujemo RunPod ili Vast.ai — preko našeg linka obojica štedimo.","runpod":"Otvori RunPod","vast":"Otvori Vast.ai"},"demos":{"title":"Pogledaj kako radi","watch":"Pogledaj demo","items":["Anime — Foxies Casino 2056","UGC — brend kafe","Dokumentarac — Portoriko","YouTube bez lica — tech"]},"form":{"title":"Napravi svoj svet","brand":"Brend","pitch":"Šta pravimo?","industry":"Industrija","audience":"Publika","tier":"Paket","send":"Pošalji brif","sent":"Brif primljen. Odgovaramo u roku od jednog radnog dana."},"counter":"SCENA"}
+};
+
+/* ---------- scene stills: inline SVG dioramas (zero network weight) ---------- */
+const ACCENTS = ['#8a7bb5','#5b8a72','#b5837b','#7b93b5','#d7a86e'];
+function still(accent, seed){
+  const s = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 90'>
+    <defs><radialGradient id='g' cx='${30+seed*10}%' cy='30%' r='90%'>
+      <stop offset='0%' stop-color='${accent}'/><stop offset='55%' stop-color='#1a1524'/><stop offset='100%' stop-color='#0d0b12'/>
+    </radialGradient></defs>
+    <rect width='160' height='90' fill='url(#g)'/>
+    <ellipse cx='${40+seed*18}' cy='72' rx='${34+seed*4}' ry='7' fill='#000' opacity='.45'/>
+    <rect x='${28+seed*16}' y='${44-seed*3}' width='${20+seed*3}' height='${26+seed*4}' rx='3' fill='${accent}' opacity='.5'/>
+    <rect x='${58+seed*14}' y='${52-seed*2}' width='12' height='${18+seed*3}' rx='2' fill='${accent}' opacity='.3'/>
+    <circle cx='${120-seed*8}' cy='${24+seed*4}' r='${8+seed}' fill='${accent}' opacity='.65'/>
+  </svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+}
+
+/* ---------- mount / i18n ---------- */
+const API_BASE = ''; // same origin; point at the COSMOS API host when served statically
+let current = 'en';
+
+function worldConfig(loc){
+  return {
+    brand: { name: 'COSMOS Studio', href: '#world' },
+    cta: { label: loc.nav.start, href: '#start' },
+    diveScroll: 1.25, connScroll: 0.9, hint: loc.counter === 'SCENE' ? 'scroll to fly in' : (loc.counter === 'ESCENA' ? 'haz scroll' : 'skroluj'),
+    nav: true, atmosphere: true,
+    sections: loc.beats.map((b, i) => ({
+      id: 'beat-' + i, label: b.label, still: still(ACCENTS[i], i), accent: ACCENTS[i],
+      eyebrow: b.eyebrow, title: b.title, body: b.body,
+      ...(b.cta ? { cta: { primary: { label: b.cta, href: '#start' } } } : {}),
+    })),
+    connectors: [null, null, null, null],
+  };
+}
+
+function applyI18n(loc){
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = el.dataset.i18n.split('.').reduce((o, k) => o && o[k], loc);
+    if (typeof v === 'string') el.textContent = v;
+  });
+  const tiers = document.getElementById('tiers');
+  tiers.innerHTML = loc.pricing.tiers.map((t, i) =>
+    `<div class="tier${i === 1 ? ' hot' : ''}"><h3>${t.name}</h3><div class="price">${t.price}</div><ul>${t.scope.map(s => `<li>${s}</li>`).join('')}</ul></div>`).join('');
+  document.getElementById('demo-grid').innerHTML = loc.demos.items.map(d =>
+    `<div class="demo-card"><b>${d.split(' — ')[0]}</b>${d.split(' — ')[1] || ''}</div>`).join('');
+  document.getElementById('demo-modal-list').innerHTML = loc.demos.items.map(d => `<li>▸ ${d}</li>`).join('');
+}
+
+function mount(lang){
+  current = lang;
+  const loc = LOCALES[lang];
+  document.documentElement.lang = lang;
+  const host = document.getElementById('world');
+  host.innerHTML = '';
+  mountScrollWorld(host, worldConfig(loc));
+  applyI18n(loc);
+}
+
+document.querySelectorAll('.lang-toggle button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.lang-toggle button').forEach(x => x.classList.toggle('on', x === b));
+  mount(b.dataset.lang);
+}));
+
+/* ---------- frame counter + past-world state ---------- */
+const fcNum = document.getElementById('fc-num'), fcScene = document.getElementById('fc-scene');
+addEventListener('scroll', () => {
+  const vh = innerHeight, y = scrollY;
+  const worldEnd = 1.25 * 5 * vh + 0.9 * 0 * vh; // 5 dives, crossfade connectors
+  fcNum.textContent = String(Math.floor(y / vh * 24) + 1).padStart(4, '0');
+  fcScene.textContent = LOCALES[current].counter + ' ' + String(Math.min(5, Math.floor(y / (1.25 * vh)) + 1)).padStart(2, '0');
+  document.body.classList.toggle('past-world', y > worldEnd);
+}, { passive: true });
+
+/* ---------- demo modal ---------- */
+const modal = document.getElementById('demo-modal');
+document.getElementById('open-demos').addEventListener('click', () => modal.showModal());
+document.getElementById('close-demos').addEventListener('click', () => modal.close());
+
+/* ---------- intake form → POST /api/brief ---------- */
+document.getElementById('brief-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  const note = document.getElementById('form-note');
+  const body = Object.fromEntries(f.entries());
+  body.languages = [current];
+  body.market_id = current === 'sr' ? 'serbia-balkans' : current === 'es' ? 'mexico' : 'us-en';
+  try {
+    const r = await fetch(API_BASE + '/api/brief', {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
+    });
+    note.textContent = r.ok ? LOCALES[current].form.sent : 'Error ' + r.status + ' — hola@kupuri.media';
+  } catch {
+    note.textContent = 'Offline — hola@kupuri.media';
+  }
+});
+
+mount('en');
+</script>
+</body>
+</html>

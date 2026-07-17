@@ -1,0 +1,30 @@
+{
+  "lang": "sr",
+  "hero": { "title": "Scroll je kamera.", "sub": "Tvoj brend, kao svet." },
+  "beats": [
+    { "label": "Dolazak", "eyebrow": "COSMOS Studio", "title": "Scroll je kamera.", "body": "Tvoj brend, kao svet. Skroluj — kamera se već kreće." },
+    { "label": "Brif", "eyebrow": "Prvi korak", "title": "Ispričaj nam priču", "body": "Jedan brif. Mi ga pretvaramo u scene, tekst i putanju kamere." },
+    { "label": "Produkcija", "eyebrow": "Drugi korak", "title": "Mašine renderuju", "body": "Scene, letovi, prelazi bez reza — uz kontrolu kvaliteta u svakom prolazu." },
+    { "label": "Svetovi", "eyebrow": "Ne samo sajtovi", "title": "Pet proizvodnih linija", "body": "Scroll sajtovi, UGC reklame, anime, dokumentarci, YouTube bez lica. Isti motor." },
+    { "label": "Počni", "eyebrow": "Dani, ne meseci", "title": "Napravi svoj svet", "body": "Kapara pokreće posao. Tri meseca kasnije — zauvek je tvoje.", "cta": "Napravi svoj svet" }
+  ],
+  "nav": { "pricing": "Cene", "demos": "Demo", "start": "Počni" },
+  "pricing": {
+    "title": "Tvoje. Nikad iznajmljeno.",
+    "plan": "Tvoje za 3 meseca. Plaćaš dok rasteš. Ostaje ti zauvek.",
+    "tiers": [
+      { "name": "Starter", "price": "od €600", "scope": ["4–5 scena", "Desktop", "1 jezik"] },
+      { "name": "Growth", "price": "od €1.200", "scope": ["6–7 scena", "Mobilna verzija", "Dvojezično"] },
+      { "name": "Flagship", "price": "od €2.200", "scope": ["Pun 1080p", "UGC paket reklama", "Deploy uključen"] }
+    ],
+    "buy": "Kupi studio"
+  },
+  "compute": { "title": "Tvoj GPU", "body": "Renderi rade na cloud GPU koji ti kontrolišeš. Preporučujemo RunPod ili Vast.ai — preko našeg linka obojica štedimo.", "runpod": "Otvori RunPod", "vast": "Otvori Vast.ai" },
+  "demos": { "title": "Pogledaj kako radi", "watch": "Pogledaj demo", "items": ["Anime — Foxies Casino 2056", "UGC — brend kafe", "Dokumentarac — Portoriko", "YouTube bez lica — tech"] },
+  "form": {
+    "title": "Napravi svoj svet",
+    "brand": "Brend", "pitch": "Šta pravimo?", "industry": "Industrija", "audience": "Publika", "tier": "Paket",
+    "send": "Pošalji brif", "sent": "Brif primljen. Odgovaramo u roku od jednog radnog dana."
+  },
+  "counter": "SCENA"
+}
